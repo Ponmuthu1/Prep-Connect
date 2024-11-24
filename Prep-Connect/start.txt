@@ -1,0 +1,19 @@
+##Use 2 different terminals
+
+#To create:
+
+cd client
+npm i
+npm start
+
+cd server
+npm i
+npm run dev
+
+#To run:
+
+cd client
+npm start
+
+cd server
+npm run dev

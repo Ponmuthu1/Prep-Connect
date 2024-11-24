@@ -1,0 +1,95 @@
+/* Main container for the question list page */
+.question-list-page {
+    max-width: 400px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  /* Title styling */
+  .question-list-page h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333333;
+  }
+  
+  /* Dropdown styling */
+  .question-list-page label {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  
+  .question-list-page select {
+    padding: 8px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 15px;
+  }
+  
+  /* Add question button */
+  .question-list-page button {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .question-list-page button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Container for question list with scroll */
+  .question-list-container {
+    max-height: 150px; /* Limit the height of the list container */
+    overflow-y: auto; /* Enable vertical scrolling */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    padding: 10px;
+  }
+  
+  /* Questions list */
+  .question-list-container ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Individual question items */
+  .question-list-container li {
+    margin: 10px 0;
+    font-size: 16px;
+  }
+  
+  .question-list-container li a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .question-list-container li a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 600px) {
+    .question-list-page {
+      padding: 15px;
+    }
+  
+    .question-list-page h2 {
+      font-size: 20px;
+    }
+  
+    .question-list-container {
+      max-height: 120px; /* Adjust height for smaller screens */
+    }
+  }
+  

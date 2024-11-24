@@ -1,0 +1,6 @@
+//git init 
+//git remote add origin https://github.com/Ponmuthu1/Prep-Connect
+
+git add .
+git commit -m "Commit message"
+git push -u -f origin master  

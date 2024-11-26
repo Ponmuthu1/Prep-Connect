@@ -1,0 +1,27 @@
+##Use 2 different terminals
+
+#To create:
+
+create a .env file inside server and add:
+
+#MONGO_URI="mongodb://localhost:27017/authApp"
+MONGO_URI=""
+JWT_SECRET=
+PORT=5000
+ENCRYPTION_KEY=
+
+cd client
+npm i
+npm run dev
+
+cd server
+npm i
+npm run dev
+
+#To run:
+
+cd client
+npm run dev
+
+cd server
+npm run dev

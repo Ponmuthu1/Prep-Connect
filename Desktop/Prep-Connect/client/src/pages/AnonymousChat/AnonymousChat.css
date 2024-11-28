@@ -1,0 +1,291 @@
+/* AnonymousChat.css */
+
+/* Chat Container */
+.anonymous-chat-container {
+  display: flex;
+  height: 80vh;
+  width: 90vw;
+  max-width: 1200px;
+  background-color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 40px;
+}
+
+/* Room List Styles */
+.room-list {
+  width: 25%;
+  border-right: 1px solid #ccc;
+  overflow-y: auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.room-list h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+.room-item {
+  padding: 15px;
+  cursor: pointer;
+  background-color: #fff;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  transition: background 0.3s, box-shadow 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.room-item:hover {
+  background-color: #f0f0f0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.room-item.selected {
+  background-color: #e0e0e0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Chat Window Styles */
+.chat-window {
+  width: 75%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-window h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+/* Messages Styles */
+.messages {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.message {
+  margin: 5px 0;
+  padding: 10px;
+  background-color: #e9e9eb;
+  border-radius: 8px;
+  max-width: 70%;
+  position: relative;
+  align-self: flex-start;
+}
+
+.message:hover {
+  transform: scale(1.02);
+}
+
+/* Date Header Styles */
+.date-header {
+  text-align: center;
+  margin: 10px 0;
+  font-size: 0.9em;
+  color: #666;
+}
+
+/* Timestamp Styles */
+.message .time {
+  display: block;
+  font-size: 0.8em;
+  color: #888;
+  text-align: right;
+  margin-top: 5px;
+}
+
+/* Input Styles */
+.message-input {
+  display: flex;
+  align-items: center;
+}
+
+.message-input input {
+  flex: 1;
+  padding: 15px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s;
+}
+
+.message-input input:focus {
+  border-color: #007bff;
+}
+
+.message-input button {
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.message-input button:hover {
+  background-color: #0056b3;
+}
+/* Media Queries for responsiveness */
+
+/* Mobile (screens 480px and below) */
+@media (max-width: 480px) {
+  .anonymous-chat-container {
+    flex-direction: column; /* Stack the rooms and chat window */
+    width: 100%;
+    height: 100%;
+    margin-top: 20px; /* Reduce the margin on mobile */
+  }
+
+  .room-list {
+    width: 100%;
+    border-right: none; /* Remove the border on mobile */
+    border-bottom: 1px solid #ccc; /* Add a border below */
+    padding: 15px;
+  }
+
+  .chat-window {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .room-item {
+    font-size: 14px; /* Adjust font size for mobile */
+    padding: 10px;
+  }
+
+  .message-input input {
+    padding: 12px; /* Reduce padding */
+    font-size: 14px; /* Adjust font size */
+  }
+
+  .message-input button {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .messages {
+    padding: 10px;
+  }
+
+  .message {
+    max-width: 100%; /* Allow messages to take full width */
+    font-size: 14px;
+  }
+
+  .date-header {
+    font-size: 0.8em; /* Smaller date text on mobile */
+  }
+
+  .message .time {
+    font-size: 0.7em; /* Smaller time text */
+  }
+}
+
+/* Tablet (screens 481px to 768px) */
+@media (max-width: 768px) {
+  .anonymous-chat-container {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .room-list {
+    width: 100%;
+    padding: 15px;
+    border-right: none;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .chat-window {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .room-item {
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  .message-input input {
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  .message-input button {
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  .message {
+    max-width: 90%; /* Allow more width for messages */
+    font-size: 16px;
+  }
+
+  .date-header {
+    font-size: 0.9em;
+  }
+
+  .message .time {
+    font-size: 0.8em;
+  }
+}
+
+/* Desktop and larger screens */
+@media (min-width: 1024px) {
+  .anonymous-chat-container {
+    flex-direction: row;
+    width: 90%;
+    margin-top: 40px;
+  }
+
+  .room-list {
+    width: 25%;
+    padding: 20px;
+  }
+
+  .chat-window {
+    width: 75%;
+    padding: 20px;
+  }
+
+  .room-item {
+    font-size: 18px;
+    padding: 15px;
+  }
+
+  .message-input input {
+    padding: 15px;
+    font-size: 18px;
+  }
+
+  .message-input button {
+    padding: 15px;
+    font-size: 18px;
+  }
+
+  .message {
+    max-width: 70%;
+    font-size: 18px;
+  }
+
+  .date-header {
+    font-size: 1em;
+  }
+
+  .message .time {
+    font-size: 0.9em;
+  }
+}
+

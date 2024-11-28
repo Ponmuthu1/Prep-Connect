@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <rect width="200" height="200" fill="#f7f9fc" />
+  <!-- Chat bubble forming 'P' -->
+  <path
+    d="M60,40 h80 a40,40 0 1,1 -40,80 h-20 v20 l-20-20 v-80 z"
+    fill="#4CAF50"
+  />
+  <!-- Smaller chat bubble -->
+  <circle cx="130" cy="85" r="10" fill="#FFFFFF" />
+  <!-- Nodes for connection -->
+  <circle cx="60" cy="60" r="5" fill="#3b5998" />
+  <circle cx="100" cy="60" r="5" fill="#3b5998" />
+  <circle cx="80" cy="100" r="5" fill="#3b5998" />
+  <!-- Programming symbols -->
+  <text x="70" y="180" font-family="Arial, sans-serif" font-size="20" fill="#333">
+    {'{'} C | JS {'}'}
+  </text>
+</svg>

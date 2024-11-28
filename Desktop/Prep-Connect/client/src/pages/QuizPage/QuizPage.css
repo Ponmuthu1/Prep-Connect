@@ -1,0 +1,146 @@
+/* QuizPage.css */
+
+/* Quiz Selection Section */
+.quiz-selection {
+  text-align: center;
+  margin-top: 80px;
+}
+
+.quiz-selection-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.quiz-selection-dropdown {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.quiz-selection-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.quiz-selection-button:hover {
+  background-color: #0056b3;
+}
+
+/* Quiz Container */
+/* Quiz Container */
+.quiz {
+  margin: 10vh auto;
+  max-width: 800px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-height: 80vh; /* Set maximum height */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/* Quiz Questions Section */
+.quiz-questions {
+  padding: 20px;
+}
+
+.quiz-question {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.quiz-question-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.quiz-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.quiz-option-radio {
+  margin-right: 10px;
+}
+
+.quiz-option-label {
+  font-size: 16px;
+  color: #555;
+  cursor: pointer;
+}
+
+/* Submit Button */
+.quiz-submit-button {
+  display: block;
+  margin: 20px auto 0;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #28a745;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.quiz-submit-button:hover {
+  background-color: #218838;
+}
+
+/* Quiz Score Section */
+.quiz-score {
+  text-align: center;
+  margin-top: 80px;
+}
+
+.quiz-score-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #28a745;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .quiz-selection,
+  .quiz-score {
+    margin-top: 40px;
+  }
+
+  .quiz-selection-title,
+  .quiz-score-title {
+    font-size: 20px;
+  }
+
+  .quiz-selection-dropdown,
+  .quiz-selection-button,
+  .quiz-submit-button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .quiz {
+    margin: 5vh auto;
+    padding: 15px;
+  }
+
+  .quiz-question {
+    padding: 10px;
+  }
+
+  .quiz-question-title,
+  .quiz-option-label {
+    font-size: 14px;
+  }
+}

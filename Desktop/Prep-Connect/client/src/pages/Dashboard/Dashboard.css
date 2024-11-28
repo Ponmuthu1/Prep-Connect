@@ -1,0 +1,25 @@
+.dashboard-container {
+  text-align: center;
+  padding: 50px;
+}
+
+.dashboard-container h1 {
+  font-size: 2.5em;
+  color: #333;
+}
+
+.chat-button {
+  padding: 15px 30px;
+  font-size: 1.1em;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+.chat-button:hover {
+  background-color: #0056b3;
+}

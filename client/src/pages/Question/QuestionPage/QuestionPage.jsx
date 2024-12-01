@@ -146,13 +146,15 @@ Options: ${questionData.options.join(", ")}
             {showAnswer ? (
               <>
                 <p>{questionData.answer}</p>
-                <button
-                  className="invisible"
-                  onClick={handleExplain}
-                  disabled={loadingExplanation}
-                >
-                  Explain with AI
-                </button>
+                {token && (
+                  <button
+                    className="invisible"
+                    onClick={handleExplain}
+                    disabled={loadingExplanation}
+                  >
+                    Explain with AI
+                  </button>
+                )}
                 {loadingExplanation && <p>Loading explanation...</p>}
                 {explanation && (
                   <div>

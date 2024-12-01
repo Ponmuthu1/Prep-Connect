@@ -1,16 +1,20 @@
 Frontend
     add logo in nav
-    send the messages after pressing enter--X
     Changing theme of the Home page and making it responsive
     Changing the Home to "/" route and removing jwt if it is responsive
-    add jwt authentication for anonnamous chat(may be)--x
-    make the explain visible--x
-    add form validation with storng password and conveting password to lowercase
 
 Backend
     Live users
     
-
 Micianlinous
     removing Abusive words
     edit user data
+
+Completed on 1-12-2024
+    added reset password and forgot password
+    Otp add with rate limits with ip and 1 reset per day
+    send the messages after pressing enter
+    add jwt authentication for anonnamous chat, changed to academic chat ,switch to show name ,non anoynomous chats are shown in right side
+    made the explain visible
+    added form validation with storng password and conveting password to lowercase
+    added unique name checking

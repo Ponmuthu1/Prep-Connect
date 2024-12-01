@@ -156,7 +156,12 @@ function AnonymousChat() {
             <>
               <div className="messages">
                 {messages.map((msg, index) => (
-                  <div key={index} className="message">
+                  <div
+                    key={index}
+                    className={`message ${
+                      msg.userName === userName ? "sent" : ""
+                    }`}
+                  >
                     {msg.userName && <strong>{msg.userName}</strong>}
                     <p>{msg.message}</p>
                     <span className="time">

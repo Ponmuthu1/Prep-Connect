@@ -6,6 +6,7 @@ import "./Login.css";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   async function loginUser(event) {
@@ -22,7 +23,6 @@ function Login() {
     const data = await response.json();
     if (data.user) {
       localStorage.setItem("token", data.user);
-      // alert("Login successful");
       navigate("/dashboard");
     } else {
       alert("Login failed");
@@ -39,17 +39,20 @@ function Login() {
             <input
               placeholder="Email"
               type="email"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value.toLowerCase())}
               className="input"
             />
           </div>
           <div className="form-group">
             <input
               placeholder="Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               onChange={(e) => setPassword(e.target.value)}
               className="input"
             />
+            <span onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? "🛡️" : "👁️‍🗨️"}
+            </span>
           </div>
           <input type="submit" value="Login" className="submit-btn" />
         </form>
@@ -57,6 +60,10 @@ function Login() {
           <p>
             Don't have an account? <a href="/register">Register</a>
           </p>
+          <div className="links">
+            <a href="/forgot-password">Forgot Password?</a>
+            <a href="/reset-password">Reset Password</a>
+          </div>
         </div>
       </div>
     </>

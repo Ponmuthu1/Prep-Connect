@@ -12,6 +12,8 @@ import QuestionPage from "./pages/Question/QuestionPage/QuestionPage";
 import QuestionListPage from "./pages/Question/QuestionListPage/QuestionListPage";
 import QuizPage from "./pages/QuizPage/QuizPage";
 import Home from "./pages/Home/Home";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
           <Route path="/add-question" element={<AddQuestionPage />} />
           <Route path="/quiz" element={<QuizPage />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
       </BrowserRouter>
     </div>

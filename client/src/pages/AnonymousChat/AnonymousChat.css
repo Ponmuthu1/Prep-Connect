@@ -138,3 +138,13 @@
 .message-input button:hover {
   background-color: #0056b3;
 }
+
+.message.sent {
+  background-color: #d1f7c4; /* Different background color for sent messages */
+  align-self: flex-end; /* Align sent messages to the right */
+  text-align: right; /* Align text to the right */
+}
+
+.message:hover {
+  transform: scale(1.02);
+}

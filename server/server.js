@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-dotenv.config();
 import express from "express";
 import cors from "cors";
 import { Server } from "socket.io";
@@ -9,8 +8,12 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import http from "http";
 import axios from 'axios';
-import OpenAI from 'openai';
+import validator from 'validator';
+import bodyParser from 'body-parser';
+import sgMail from '@sendgrid/mail';
+import rateLimit from 'express-rate-limit';
 
+dotenv.config();
 const app = express();
 
 // Load environment variables from .env file
@@ -23,6 +26,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(bodyParser.json());
 
 const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
@@ -95,24 +99,209 @@ function authenticateToken(req, res, next) {
   }
 }
 
-// User Registration
-app.post("/api/register", async (req, res) => {
-  const { name, email, password } = req.body;
-  const usersCollection = db.collection("users");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-  try {
-    const existingUser = await usersCollection.findOne({ email });
-    if (existingUser) {
-      return res.json({ status: "error", error: "User already exists" });
-    }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    await usersCollection.insertOne({ name, email, password: hashedPassword });
-    res.json({ status: "ok" });
-  } catch (err) {
-    console.error(err);
-    res.json({ status: "error", error: "Could not register user" });
+// Function to send an alert (e.g., log a message or send an email)
+function sendRateLimitAlert(ip) {
+  console.log(`Rate limit exceeded for IP: ${ip}`);
+  // You can also send an email or other types of alerts here
+}
+
+// Rate limiter for OTP generation during registration
+const registerOtpRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 2, // Limit each IP to 2 request per windowMs
+  handler: (req, res, next) => {
+    sendRateLimitAlert(req.ip);
+    res.status(429).json({
+      status: "error",
+      error: "Too many OTP requests from this IP, please try again after 15 minutes"
+    });
   }
+});
+
+// Rate limiter for forgot password endpoint
+const forgotPasswordRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 2, // Limit each IP to 2 requests per windowMs
+  handler: (req, res, next) => {
+    sendRateLimitAlert(req.ip);
+    res.status(429).json({
+      status: "error",
+      error: "Too many password reset requests from this IP, please try again after 15 minutes"
+    });
+  }
+});
+
+app.post("/api/generate-otp", registerOtpRateLimiter, async (req, res) => {
+  const { email, name } = req.body;
+  const usersCollection = db.collection("users");
+  const otpsCollection = db.collection("otps");
+
+  const existingUserByEmail = await usersCollection.findOne({ email: email.toLowerCase() });
+  if (existingUserByEmail) {
+    return res.json({ status: "error", error: "User with this email already exists" });
+  }
+
+  const existingUserByName = await usersCollection.findOne({ name: name });
+  if (existingUserByName) {
+    return res.json({ status: "error", error: "User with this name already exists" });
+  }
+
+  const oneDay = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+  const now = new Date();
+
+  const otpDoc = await otpsCollection.findOne({ email: email.toLowerCase() });
+  if (otpDoc && now - new Date(otpDoc.createdAt) < oneDay) {
+    return res.json({ status: "error", error: "You can only request an OTP once per day." });
+  }
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  await otpsCollection.insertOne({ email: email.toLowerCase(), otp, createdAt: now });
+
+  await sendOtpEmail(email, otp);
+  res.json({ status: "ok", message: "OTP sent to email" });
+});
+
+
+async function sendOtpEmail(email, otp) {
+  const msg = {
+    to: email,
+    from: process.env.EMAIL_FROM,
+    subject: 'Your OTP Code',
+    text: `Your OTP code is ${otp}`,
+  };
+  await sgMail.send(msg);
+}
+
+app.post("/api/generate-reset-otp", async (req, res) => {
+  const { email, oldPassword, newPassword } = req.body;
+  const usersCollection = db.collection("users");
+  const otpsCollection = db.collection("otps");
+
+  const user = await usersCollection.findOne({ email: email.toLowerCase() });
+  if (!user) {
+    return res.json({ status: "error", error: "User not found" });
+  }
+
+  const oneDay = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+  const now = new Date();
+
+  if (user.lastPasswordReset && now - new Date(user.lastPasswordReset) < oneDay) {
+    return res.json({ status: "error", error: "You can only request a password reset once per day." });
+  }
+
+  if (!(await bcrypt.compare(oldPassword, user.password))) {
+    return res.json({ status: "error", error: "Invalid old password" });
+  }
+
+  if (await bcrypt.compare(newPassword, user.password)) {
+    return res.json({ status: "error", error: "New password cannot be the same as the old password" });
+  }
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  await otpsCollection.insertOne({ email: email.toLowerCase(), otp });
+
+  await sendOtpEmail(email, otp);
+
+  // Update the lastPasswordReset timestamp
+  await usersCollection.updateOne(
+    { email: email.toLowerCase() },
+    { $set: { lastPasswordReset: now } }
+  );
+
+  res.json({ status: "ok", message: "OTP sent to email" });
+});
+
+app.post("/api/register", async (req, res) => {
+  const { name, email, password, confirmPassword, otp } = req.body;
+  const usersCollection = db.collection("users");
+  const otpsCollection = db.collection("otps");
+  const usernameRegex = /^[a-zA-Z0-9]{3,}$/;
+  if (!usernameRegex.test(name)) {
+    return res.status(400).json({ status: "error", error: "Username must be alphanumeric and at least 3 characters long." });
+  }
+  if (password !== confirmPassword) {
+    return res.json({ status: "error", error: "Passwords do not match" });
+  }
+
+  if (!validator.isStrongPassword(password)) {
+    return res.json({ status: "error", error: "Password is not strong enough" });
+  }
+
+  const existingUser = await usersCollection.findOne({ email: email.toLowerCase() });
+  if (existingUser) {
+    return res.json({ status: "error", error: "User already exists" });
+  }
+
+  const otpDoc = await otpsCollection.findOne({ email: email.toLowerCase(), otp });
+  if (!otpDoc) {
+    return res.json({ status: "error", error: "Invalid OTP" });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  await usersCollection.insertOne({ name, email: email.toLowerCase(), password: hashedPassword });
+  res.json({ status: "ok" });
+});
+
+app.post("/api/forgot-password", forgotPasswordRateLimiter, async (req, res) => {
+  const { email, newPassword } = req.body;
+  const usersCollection = db.collection("users");
+  const otpsCollection = db.collection("otps");
+
+  const user = await usersCollection.findOne({ email: email.toLowerCase() });
+  if (!user) {
+    return res.json({ status: "error", error: "User not found" });
+  }
+
+  const oneDay = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+  const now = new Date();
+
+  if (user.lastPasswordReset && now - new Date(user.lastPasswordReset) < oneDay) {
+    return res.json({ status: "error", error: "You can only request a password reset once per day." });
+  }
+
+  if (await bcrypt.compare(newPassword, user.password)) {
+    return res.json({ status: "error", error: "New password cannot be the same as the old password" });
+  }
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  await otpsCollection.insertOne({ email: email.toLowerCase(), otp });
+
+  await sendOtpEmail(email, otp);
+  res.json({ status: "ok", message: "OTP sent to email" });
+});
+
+app.post("/api/reset-password", async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+  const usersCollection = db.collection("users");
+  const otpsCollection = db.collection("otps");
+
+  const user = await usersCollection.findOne({ email: email.toLowerCase() });
+  if (!user) {
+    return res.json({ status: "error", error: "User not found" });
+  }
+
+  const oneDay = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+  const now = new Date();
+
+  // if (user.lastPasswordReset && now - new Date(user.lastPasswordReset) < oneDay) {
+  //   return res.json({ status: "error", error: "You can only request a password reset once per day." });
+  // }
+
+  if (await bcrypt.compare(newPassword, user.password)) {
+    return res.json({ status: "error", error: "New password cannot be the same as the old password" });
+  }
+
+  const otpDoc = await otpsCollection.findOne({ email: email.toLowerCase(), otp });
+  if (!otpDoc) {
+    return res.json({ status: "error", error: "Invalid OTP" });
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  await usersCollection.updateOne({ email: email.toLowerCase() }, { $set: { password: hashedPassword, lastPasswordReset: now } });
+  res.json({ status: "ok", message: "Password reset successful" });
 });
 
 // User Login
@@ -197,11 +386,7 @@ app.get("/api/questions/:id", async (req, res) => {
   }
 });
 
-// Initialize OpenAI with NVIDIA's API
-const openai = new OpenAI({
-  apiKey: process.env.NVIDIA_API_KEY,
-  baseURL: 'https://integrate.api.nvidia.com/v1',
-});
+
 
 async function generateExplanation(prompt) {
   const API_KEY = process.env.NVIDIA_API_KEY;
@@ -241,15 +426,17 @@ async function generateExplanation(prompt) {
 // /api/explain/:id Endpoint
 app.post("/api/explain/:id", authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const { prompt } = req.body; // Expecting 'prompt' in the request body
+  const { prompt } = req.body; // Expect 'prompt' in the request body
   const questionsCollection = db.collection("questions");
 
   if (!prompt) {
-    return res.status(400).json({ status: "error", error: "Prompt is required in the request body." });
+    return res
+      .status(400)
+      .json({ status: "error", error: "Prompt is required in the request body." });
   }
 
   try {
-    // Fetch the question from the database to ensure it exists
+    // Fetch the question from the database
     const questionDoc = await questionsCollection.findOne({
       _id: new ObjectId(id),
     });
@@ -258,10 +445,16 @@ app.post("/api/explain/:id", authenticateToken, async (req, res) => {
       return res.json({ status: "error", error: "Question not found." });
     }
 
+    // Check if explanation already exists
+    if (questionDoc.explanation) {
+      // Return the existing explanation
+      return res.json({ status: "ok", explanation: questionDoc.explanation });
+    }
+
     // Generate explanation using the provided prompt
     const explanation = await generateExplanation(prompt);
 
-    // Optionally, store the explanation in the database
+    // Store the explanation in the database
     await questionsCollection.updateOne(
       { _id: new ObjectId(id) },
       { $set: { explanation } }

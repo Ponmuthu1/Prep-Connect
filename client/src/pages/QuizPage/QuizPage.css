@@ -1,9 +1,7 @@
-/* QuizPage.css */
-
 /* Quiz Selection Section */
 .quiz-selection {
   text-align: center;
-  margin-top: 80px;
+  margin-top: 100px; /* Increased margin to bring the section lower */
 }
 
 .quiz-selection-title {
@@ -27,7 +25,6 @@
   background-color: #007bff;
   border: none;
   border-radius: 5px;
-  cursor: pointer;
 }
 
 .quiz-selection-button:hover {
@@ -35,10 +32,10 @@
 }
 
 /* Quiz Container */
-/* Quiz Container */
 .quiz {
   margin: 10vh auto;
   max-width: 800px;
+  margin-top: 70px; /* Increased margin to bring the section lower */
   background-color: #f9f9f9;
   border-radius: 10px;
   padding: 20px;
@@ -102,7 +99,7 @@
 /* Quiz Score Section */
 .quiz-score {
   text-align: center;
-  margin-top: 80px;
+  margin-top: 100px; /* Increased margin to bring the section lower */
 }
 
 .quiz-score-title {
@@ -115,7 +112,7 @@
 @media (max-width: 768px) {
   .quiz-selection,
   .quiz-score {
-    margin-top: 40px;
+    margin-top: 60px; /* Adjusted margin for smaller screens */
   }
 
   .quiz-selection-title,

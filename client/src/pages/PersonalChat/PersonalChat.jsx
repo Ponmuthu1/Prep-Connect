@@ -195,6 +195,11 @@ function PersonalChat() {
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   placeholder="Type a message..."
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && newMessage.trim()) {
+                      sendMessage();
+                    }
+                  }}
                 />
                 <button onClick={sendMessage}>Send</button>
               </div>

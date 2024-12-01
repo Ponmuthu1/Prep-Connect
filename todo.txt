@@ -1,10 +1,10 @@
 Frontend
     add logo in nav
-    send the messages after pressing enter
+    send the messages after pressing enter--X
     Changing theme of the Home page and making it responsive
     Changing the Home to "/" route and removing jwt if it is responsive
-    add jwt authentication for anonnamous chat(may be)
-    make the explain visible
+    add jwt authentication for anonnamous chat(may be)--x
+    make the explain visible--x
     add form validation with storng password and conveting password to lowercase
 
 Backend

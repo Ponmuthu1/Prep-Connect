@@ -1,0 +1,366 @@
+.app {
+  background-color: #000; /* Set background color to black */
+  color: #fff; /* Ensure text color is white for better contrast */
+  min-height: 100vh; /* Ensure the background covers the full viewport height */
+}
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #5dd39e;
+}
+
+.logo-dot {
+  width: 12px;
+  height: 12px;
+  background: #ff7f50;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.purchase-btn {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(45deg, #00c6ff, #0072ff);
+  color: #fff;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+/* Hero Section */
+.hero-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4rem 2rem 5rem 2rem;
+  gap: 2rem;
+}
+
+.hero-content {
+  max-width: 50%;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  margin-top: 6%;
+  color: #5dd39e;
+}
+
+.hero-content p {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.highlight {
+  color: #f0c94e;
+}
+
+.cta-btn {
+  padding: 1rem 2rem;
+  background: linear-gradient(45deg, #7f6eff, #50c878);
+  border-radius: 30px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: transform 0.3s;
+}
+
+.cta-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Hero Graphics */
+.hero-graphics {
+  position: relative;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Positioned Circles with Images */
+.positioned-circle {
+  position: absolute;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  overflow: hidden; /* Ensure the image stays within the circle */
+  animation: move-circle 8s linear infinite;
+  transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for hover */
+}
+
+.positioned-circle img {
+  width: 100%; /* Make the image fit the circle */
+  height: 100%;
+  object-fit: cover; /* Ensure the image doesn't stretch */
+  border-radius: 50%; /* Keep the image rounded */
+}
+
+/* Hover Effects */
+.positioned-circle:hover {
+  transform: scale(10.2); /* Slightly enlarge the circle */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Add a shadow */
+  border-color: #ff7f50; /* Highlight border */
+}
+
+/* Circle Positions */
+.circle-1 {
+  width: 80px;
+  height: 80px;
+  top: -10px;
+  right: 120%;
+}
+
+.circle-2 {
+  width: 100px;
+  height: 100px;
+  top: -155px;
+  left: 35%;
+  transform: translateX(-50%);
+}
+
+.circle-3 {
+  width: 120px;
+  height: 120px;
+  top: -70px;
+  left: 100%;
+}
+
+.circle-4 {
+  width: 90px;
+  height: 90px;
+  top: 250px;
+  right: 150px;
+}
+
+.circle-5 {
+  width: 110px;
+  height: 110px;
+  top: 165px;
+  right: 120%;
+}
+
+.circle-6 {
+  width: 130px;
+  height: 130px;
+  top: 160px;
+  left: 95%;
+  transform: translateX(-50%);
+}
+
+/* Circle Animation */
+@keyframes move-circle {
+  0% {
+    transform: scale(1) translate(0);
+  }
+  50% {
+    transform: scale(1.1) translate(10px, 10px);
+  }
+  100% {
+    transform: scale(1) translate(0);
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .circle-1 {
+    width: 60px;
+    height: 60px;
+    top: -100px;
+    left: 15%;
+  }
+
+  .circle-2 {
+    width: 80px;
+    height: 80px;
+    top: -60px;
+    left: 45%;
+  }
+
+  .circle-3 {
+    width: 90px;
+    height: 90px;
+    top: -80px;
+    right: 15%;
+  }
+
+  .circle-4 {
+    width: 70px;
+    height: 70px;
+    bottom: -40px;
+    left: 20%;
+  }
+
+  .circle-5 {
+    width: 90px;
+    height: 90px;
+    bottom: -80px;
+    right: 20%;
+  }
+
+  .circle-6 {
+    width: 110px;
+    height: 110px;
+    bottom: -60px;
+    left: 45%;
+  }
+  .hero-graphics {
+    display: none; /* Hide images on smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .circle-1,
+  .circle-2,
+  .circle-3,
+  .circle-4,
+  .circle-5,
+  .circle-6 {
+    width: 50px;
+    height: 50px;
+  }
+
+  .circle-1 {
+    top: -80px;
+    left: 15%;
+  }
+
+  .circle-2 {
+    top: -50px;
+    left: 40%;
+  }
+
+  .circle-3 {
+    top: -60px;
+    right: 10%;
+  }
+
+  .circle-4 {
+    bottom: -30px;
+    left: 10%;
+  }
+
+  .circle-5 {
+    bottom: -50px;
+    right: 10%;
+  }
+
+  .circle-6 {
+    bottom: -40px;
+    left: 40%;
+  }
+}
+
+@media (max-width: 480px) {
+  .circle-1,
+  .circle-2,
+  .circle-3,
+  .circle-4,
+  .circle-5,
+  .circle-6 {
+    width: 40px;
+    height: 40px;
+  }
+
+  .circle-1 {
+    top: -60px;
+    left: 10%;
+  }
+
+  .circle-2 {
+    top: -40px;
+    left: 30%;
+  }
+
+  .circle-3 {
+    top: -40px;
+    right: 5%;
+  }
+
+  .circle-4 {
+    bottom: -20px;
+    left: 5%;
+  }
+
+  .circle-5 {
+    bottom: -40px;
+    right: 5%;
+  }
+
+  .circle-6 {
+    bottom: -30px;
+    left: 30%;
+  }
+}
+
+.quote-box-wrapper {
+  position: relative;
+}
+
+.quote-box {
+  background: #ffda77;
+  color: #333;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  line-height: 1.5;
+  max-width: 300px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.quote-icons {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 1.2rem;
+}
+
+/* Additional Content Styles */
+.additional-content {
+  margin-top: 2rem;
+}
+
+.additional-content h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #5dd39e;
+  margin-bottom: 1rem;
+}
+
+.additional-content p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #bbb;
+  margin-bottom: 1.5rem;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+  color: #fff;
+}
+
+.features-list li {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.4;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.features-list li::before {
+  content: "✔";
+  color: #5dd39e;
+  position: absolute;
+  left: 0;
+  font-size: 1.2rem;
+  top: 0;
+}

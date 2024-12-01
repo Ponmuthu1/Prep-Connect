@@ -1,6 +1,7 @@
 // src/pages/AnonymousChat.js
 import React, { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
+import { useNavigate } from "react-router-dom";
 import NavBar from "../NavBar/NavBar";
 import "./AnonymousChat.css";
 
@@ -8,9 +9,9 @@ function AnonymousChat() {
   const [rooms] = useState([
     "General",
     "Technology",
-    "Sports",
-    "Music",
-    "Movies",
+    "News",
+    "Hiring info",
+    "Networking",
   ]);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const selectedRoomRef = useRef(selectedRoom);
@@ -18,11 +19,29 @@ function AnonymousChat() {
   const [newMessage, setNewMessage] = useState("");
   const socketRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const [showName, setShowName] = useState(false);
+  const [userName, setUserName] = useState("Anonymous");
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Initialize Socket.IO connection only once
+    // Extract the username from the JWT token
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        setUserName(payload.name);
+      } catch (e) {
+        console.error("Error decoding token:", e);
+      }
+    }
+  }, [token]);
+
+  useEffect(() => {
+    // Initialize Socket.IO connection with token
     if (!socketRef.current) {
-      const newSocket = io(`${import.meta.env.VITE_API_BASE_URL}`);
+      const newSocket = io(`${import.meta.env.VITE_API_BASE_URL}`, {
+        query: { token },
+      });
       socketRef.current = newSocket;
 
       newSocket.on("receive-anonymous-message", (data) => {
@@ -42,7 +61,7 @@ function AnonymousChat() {
         console.log("Socket disconnected");
       }
     };
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     // Keep the selectedRoom ref updated
@@ -90,6 +109,7 @@ function AnonymousChat() {
         room: selectedRoom,
         message: newMessage,
         timestamp: new Date().toISOString(),
+        userName: showName ? userName : "Anonymous",
       };
 
       socketRef.current.emit("send-anonymous-message", messageData);
@@ -97,12 +117,28 @@ function AnonymousChat() {
     }
   };
 
+  const handleLoginClick = () => {
+    navigate("/login");
+  };
+
   return (
     <>
       <NavBar />
       <div className="anonymous-chat-container">
         <div className="room-list">
-          <h2>Chat Rooms</h2>
+          <h2>
+            Chat Rooms{" "}
+            <span>
+              {token && (
+                <button
+                  onClick={() => setShowName(!showName)}
+                  className="toggle-name-btn"
+                >
+                  {showName ? "Hide Name" : "Show Name"}
+                </button>
+              )}
+            </span>
+          </h2>
           {rooms.map((room, index) => (
             <div
               key={index}
@@ -119,47 +155,39 @@ function AnonymousChat() {
           {selectedRoom ? (
             <>
               <div className="messages">
-                {messages.map((msg, index) => {
-                  const currentMessageDate = new Date(
-                    msg.timestamp
-                  ).toDateString();
-                  const previousMessageDate =
-                    index > 0
-                      ? new Date(messages[index - 1].timestamp).toDateString()
-                      : null;
-                  const showDateHeader =
-                    currentMessageDate !== previousMessageDate;
-
-                  return (
-                    <React.Fragment key={index}>
-                      {showDateHeader && (
-                        <div className="date-header">
-                          <strong>{currentMessageDate}</strong>
-                        </div>
-                      )}
-                      <div className="message">
-                        <p>{msg.message}</p>
-                        <span className="time">
-                          {new Date(msg.timestamp).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </span>
-                      </div>
-                    </React.Fragment>
-                  );
-                })}
+                {messages.map((msg, index) => (
+                  <div key={index} className="message">
+                    {msg.userName && <strong>{msg.userName}</strong>}
+                    <p>{msg.message}</p>
+                    <span className="time">
+                      {new Date(msg.timestamp).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
+                ))}
                 <div ref={messagesEndRef} />
               </div>
-              <div className="message-input">
-                <input
-                  type="text"
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  placeholder="Type a message..."
-                />
-                <button onClick={sendMessage}>Send</button>
-              </div>
+              {token ? (
+                <div className="message-input">
+                  <input
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Type a message..."
+                  />
+                  <button onClick={sendMessage}>Send</button>
+                </div>
+              ) : (
+                <div className="login-prompt">
+                  <p>
+                    <button onClick={handleLoginClick} className="login-btn">
+                      Login to chat
+                    </button>
+                  </p>
+                </div>
+              )}
             </>
           ) : (
             <p>Please select a chat room to start chatting anonymously.</p>

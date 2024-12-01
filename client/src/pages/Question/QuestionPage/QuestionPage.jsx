@@ -151,7 +151,7 @@ Options: ${questionData.options.join(", ")}
                   onClick={handleExplain}
                   disabled={loadingExplanation}
                 >
-                  Explain
+                  Explain with AI
                 </button>
                 {loadingExplanation && <p>Loading explanation...</p>}
                 {explanation && (

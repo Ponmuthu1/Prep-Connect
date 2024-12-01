@@ -9,13 +9,14 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import http from "http";
 import axios from 'axios';
+import OpenAI from 'openai';
 
 const app = express();
 
 // Load environment variables from .env file
 const corsOptions = {
   origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type", "x-access-token"],
   credentials: true,
 };
@@ -196,9 +197,6 @@ app.get("/api/questions/:id", async (req, res) => {
   }
 });
 
-// Add at the top of server.js
-import OpenAI from 'openai';
-
 // Initialize OpenAI with NVIDIA's API
 const openai = new OpenAI({
   apiKey: process.env.NVIDIA_API_KEY,
@@ -264,10 +262,10 @@ app.post("/api/explain/:id", authenticateToken, async (req, res) => {
     const explanation = await generateExplanation(prompt);
 
     // Optionally, store the explanation in the database
-    // await questionsCollection.updateOne(
-    //   { _id: new ObjectId(id) },
-    //   { $set: { explanation } }
-    // );
+    await questionsCollection.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { explanation } }
+    );
 
     // Respond with the explanation
     res.json({ status: "ok", explanation });
@@ -276,7 +274,6 @@ app.post("/api/explain/:id", authenticateToken, async (req, res) => {
     res.json({ status: "error", error: "Could not generate explanation." });
   }
 });
-
 
 // Comments Collection
 app.post("/api/comments", authenticateToken, async (req, res) => {
@@ -298,7 +295,6 @@ app.post("/api/comments", authenticateToken, async (req, res) => {
   }
 });
 
-
 app.get("/api/comments/:questionId", async (req, res) => {
   const { questionId } = req.params;
   const commentsCollection = db.collection("comments");
@@ -312,7 +308,6 @@ app.get("/api/comments/:questionId", async (req, res) => {
     res.json({ status: "error", error: "Could not fetch comments" });
   }
 });
-
 
 // Socket.io Chat Logic
 app.get("/api/chats", async (req, res) => {
@@ -374,6 +369,7 @@ app.get("/api/anonymous-chats", async (req, res) => {
           message: decrypt(chat.message),
           timestamp: chat.timestamp,
           room: chat.room,
+          userName: chat.userName || "Anonymous",
         };
       } catch (err) {
         console.error("Failed to decrypt message:", err);
@@ -381,6 +377,7 @@ app.get("/api/anonymous-chats", async (req, res) => {
           message: "Failed to decrypt message",
           timestamp: chat.timestamp,
           room: chat.room,
+          userName: chat.userName || "Anonymous",
         };
       }
     });
@@ -391,6 +388,21 @@ app.get("/api/anonymous-chats", async (req, res) => {
     res.json({ status: "error", error: "Failed to fetch anonymous chats" });
   }
 });
+
+// // Socket.io authentication middleware
+// io.use((socket, next) => {
+//   const token = socket.handshake.query.token;
+//   if (token) {
+//     jwt.verify(token, JWT_SECRET, (err, decoded) => {
+//       if (err) return next(new Error("Authentication error"));
+//       socket.userId = decoded.id;
+//       socket.userName = decoded.name;
+//       next();
+//     });
+//   } else {
+//     next(new Error("Authentication error"));
+//   }
+// });
 
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
@@ -432,17 +444,19 @@ io.on("connection", (socket) => {
 
   // Handle sending messages in anonymous chat
   socket.on("send-anonymous-message", async (data) => {
-    const { room, message, timestamp } = data;
+    const { room, message, timestamp, userName } = data;
 
     const encryptedMessage = encrypt(message);
 
+    const chatDocument = {
+      room,
+      message: encryptedMessage,
+      timestamp: new Date(timestamp),
+      userName: userName || "Anonymous",
+    };
+
     const anonChatsCollection = db.collection("anonymous_chat");
     try {
-      const chatDocument = {
-        room,
-        message: encryptedMessage,
-        timestamp: new Date(timestamp),
-      };
       await anonChatsCollection.insertOne(chatDocument);
 
       const decryptedMessage = decrypt(encryptedMessage);
@@ -451,6 +465,7 @@ io.on("connection", (socket) => {
         room,
         message: decryptedMessage,
         timestamp: chatDocument.timestamp,
+        userName: chatDocument.userName,
       };
 
       // Broadcast message to the room excluding the sender
@@ -479,8 +494,6 @@ io.on("connection", (socket) => {
     console.log("A user disconnected:", socket.id);
   });
 });
-
-
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {

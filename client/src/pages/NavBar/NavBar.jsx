@@ -48,7 +48,7 @@ function NavBar() {
           <Link to="/chat">Personal Chat</Link>
         </li>
         <li>
-          <Link to="/chatroom">Anonymous Chat</Link>
+          <Link to="/chatroom">Academic Chat</Link>
         </li>
         {token ? (
           <li>

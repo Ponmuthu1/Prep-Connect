@@ -106,6 +106,6 @@ button:hover {
     height: 50px; /* Smaller height for compact view */
   }
 }
-.invisible {
+/* .invisible {
   display: none;
-}
+} */

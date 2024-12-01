@@ -14,5 +14,3 @@ Backend
 Micianlinous
     removing Abusive words
     edit user data
-    admin panel
-    use a different hosting platform

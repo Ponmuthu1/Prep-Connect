@@ -94,6 +94,14 @@ function Register() {
           </div>
           <div className="register-form-group">
             <input
+              placeholder="OTP"
+              type="text"
+              onChange={(e) => setOtp(e.target.value)}
+              className="register-input"
+            />
+          </div>
+          <div className="register-form-group">
+            <input
               placeholder="Password"
               type={showPassword ? "text" : "password"}
               onChange={(e) => setPassword(e.target.value)}
@@ -111,14 +119,7 @@ function Register() {
               className="register-input"
             />
           </div>
-          <div className="register-form-group">
-            <input
-              placeholder="OTP"
-              type="text"
-              onChange={(e) => setOtp(e.target.value)}
-              className="register-input"
-            />
-          </div>
+
           <input
             type="submit"
             value="Register"

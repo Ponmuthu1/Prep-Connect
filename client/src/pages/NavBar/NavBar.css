@@ -1,0 +1,147 @@
+/* Navbar Container */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #20232a;
+  padding: 15px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo Section */
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo {
+  width: 100px;
+  height: 40px;
+}
+
+/* Right Section (Links + Username) */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Space between links and username */
+}
+
+/* Navigation Links */
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 20px; /* Increased spacing between links */
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links li {
+  position: relative;
+}
+
+.navbar-links li a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 8px 15px; /* Padding for a clickable area */
+  border-radius: 5px;
+  transition: all 0.3s ease; /* Smooth hover transition */
+}
+
+/* Hover Effect */
+.navbar-links li a:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Highlight background */
+  color: #61dafb; /* Change text color on hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
+}
+
+/* Username Dropdown */
+.username-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center; /* Align username with the links */
+}
+
+.username {
+  color: #61dafb;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 8px 30px; /* Add padding for a better click area */
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.username:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Subtle hover effect */
+  color: #ffffff;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #20232a;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 5px;
+  width: 150px;
+}
+
+.dropdown-menu .signout-button {
+  color: #ffffff;
+  background-color: #d9534f;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.dropdown-menu .signout-button:hover {
+  background-color: #c9302c;
+}
+
+/* Mobile Menu */
+.navbar-toggle {
+  display: none; /* Hidden by default */
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .navbar-right {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .navbar-links {
+    flex-direction: column;
+    gap: 15px; /* Reduced gap for mobile */
+    display: none; /* Hidden by default */
+    background-color: #20232a;
+    padding: 10px 20px;
+    border-radius: 5px;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  }
+
+  .navbar-links.show {
+    display: flex;
+  }
+
+  .navbar-toggle {
+    display: block; /* Show toggle button on small screens */
+  }
+}

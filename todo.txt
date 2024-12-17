@@ -1,0 +1,20 @@
+Frontend
+    add logo in nav
+    Changing theme of the Home page and making it responsive
+    Changing the Home to "/" route and removing jwt if it is responsive
+
+Backend
+    Live users
+    
+Micianlinous
+    removing Abusive words
+    edit user data
+
+Completed on 1-12-2024
+    added reset password and forgot password
+    Otp add with rate limits with ip and 1 reset per day
+    send the messages after pressing enter
+    add jwt authentication for anonnamous chat, changed to academic chat ,switch to show name ,non anoynomous chats are shown in right side
+    made the explain visible if logged in else invisible
+    added form validation with storng password and conveting password to lowercase
+    added unique name checking

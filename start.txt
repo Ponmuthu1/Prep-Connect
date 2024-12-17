@@ -9,6 +9,18 @@ MONGO_URI=""
 JWT_SECRET=
 PORT=5000
 ENCRYPTION_KEY=
+CORS_ALLOWED_ORIGIN=http://localhost:3000
+#CORS_ALLOWED_ORIGIN=
+NVIDIA_API_KEY=
+SENDGRID_API_KEY=
+EMAIL_FROM=
+
+
+create a .env file inside client and add:
+
+VITE_API_BASE_URL=http://localhost:5000
+
+start in 2 different terminals:
 
 cd client
 npm i
